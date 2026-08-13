@@ -46,7 +46,7 @@
         "minItems": 4,
         "maxItems": 4,
           "uniqueItems": true,
-          "items": { "enum": ["小说", "AI剪辑", "内容审计", "数据收集"] }
+          "items": { "enum": ["小说", "AI内容创作", "内容审计", "数据收集"] }
         },
         "preserve_project_boundary": { "const": true },
         "automatic_execution": { "const": false },

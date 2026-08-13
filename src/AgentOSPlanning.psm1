@@ -5,7 +5,7 @@ $projectRoot = Split-Path -Parent $PSScriptRoot
 $schemaPath = Join-Path $projectRoot 'schemas\agent_os_plan.schema.json'
 Import-Module (Join-Path $PSScriptRoot 'HermesHarness.psm1') -Force
 
-$businessProjects = @('小说', 'AI剪辑', '内容审计', '数据收集')
+$businessProjects = @('小说', 'AI内容创作', '内容审计', '数据收集')
 $requiredCapabilities = @(
     'runtime_kernel',
     'worker_protocol',
@@ -502,7 +502,7 @@ function New-AgentOSTasks {
         },
         [ordered]@{
             task_id = 'AOS-006'; phase = 4; title = '接通四项目适配与垂直切片'
-            objective = '让小说、AI剪辑、内容审计、数据收集通过统一协议被调度。'
+            objective = '让小说、AI内容创作、内容审计、数据收集通过统一协议被调度。'
             depends_on = @('AOS-002', 'AOS-003', 'AOS-004'); capabilities = @('project_adapters')
             deliverables = @('四项目适配矩阵', '至少一条跨项目端到端任务')
             acceptance = @('不新增第六个业务项目', '项目上下文按需加载且边界可验证')

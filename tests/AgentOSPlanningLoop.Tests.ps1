@@ -61,7 +61,7 @@ Describe 'Agent OS planning loop public interface' {
         $plan.loop_policy.max_attempts | Should -Be 2
         $plan.loop_policy.max_repairs | Should -Be 1
         @($plan.constraints.business_projects).Count | Should -Be 4
-        (@($plan.constraints.business_projects) -join ',') | Should -Be '小说,AI剪辑,内容审计,数据收集'
+        (@($plan.constraints.business_projects) -join ',') | Should -Be '小说,AI内容创作,内容审计,数据收集'
         @($plan.tasks | Where-Object { $_.task_id -eq 'AOS-008' }).Count | Should -Be 1
     }
 
