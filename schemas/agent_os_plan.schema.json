@@ -1,0 +1,166 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.hermes-harness/schemas/agent_os_plan.schema.json",
+  "title": "Hermes Agent OS Plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "plan_id",
+    "created_at",
+    "updated_at",
+    "objective",
+    "target",
+    "state",
+    "execution_authorized",
+    "constraints",
+    "capability_targets",
+    "tasks",
+    "loop_policy",
+    "approval",
+    "last_validation"
+  ],
+  "properties": {
+    "schema_version": { "const": "0.1" },
+    "plan_id": { "type": "string", "pattern": "^agent-os-plan-[A-Za-z0-9-]+$" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "updated_at": { "type": "string", "format": "date-time" },
+    "objective": { "type": "string", "minLength": 1 },
+    "target": { "const": "agent_os" },
+    "state": {
+      "enum": ["draft", "evaluating", "repairing", "waiting_for_approval", "approved", "failed"]
+    },
+    "execution_authorized": { "const": false },
+    "constraints": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "business_projects",
+        "preserve_project_boundary",
+        "automatic_execution",
+        "core_mutations_require_approval"
+      ],
+      "properties": {
+        "business_projects": {
+          "type": "array",
+        "minItems": 4,
+        "maxItems": 4,
+          "uniqueItems": true,
+          "items": { "enum": ["小说", "AI剪辑", "内容审计", "数据收集"] }
+        },
+        "preserve_project_boundary": { "const": true },
+        "automatic_execution": { "const": false },
+        "core_mutations_require_approval": { "const": true }
+      }
+    },
+    "capability_targets": {
+      "type": "array",
+      "minItems": 8,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "runtime_kernel",
+          "worker_protocol",
+          "scheduling_recovery",
+          "observability_cost_quality",
+          "memory_governance",
+          "project_adapters",
+          "controlled_evolution",
+          "readiness_gate"
+        ]
+      }
+    },
+    "tasks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "task_id",
+          "phase",
+          "title",
+          "objective",
+          "depends_on",
+          "capabilities",
+          "deliverables",
+          "acceptance",
+          "status",
+          "authority",
+          "project_scope"
+        ],
+        "properties": {
+          "task_id": { "type": "string", "pattern": "^AOS-[0-9]{3}$" },
+          "phase": { "type": "integer", "minimum": 1 },
+          "title": { "type": "string", "minLength": 1 },
+          "objective": { "type": "string", "minLength": 1 },
+          "depends_on": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": { "type": "string", "pattern": "^AOS-[0-9]{3}$" }
+          },
+          "capabilities": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": { "type": "string", "minLength": 1 }
+          },
+          "deliverables": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string", "minLength": 1 }
+          },
+          "acceptance": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string", "minLength": 1 }
+          },
+          "status": { "const": "proposed" },
+          "authority": { "const": "human_approval_required" },
+          "project_scope": { "const": "harness_infrastructure" }
+        }
+      }
+    },
+    "loop_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["max_attempts", "max_repairs", "attempts", "repairs_requested"],
+      "properties": {
+        "max_attempts": { "const": 2 },
+        "max_repairs": { "const": 1 },
+        "attempts": { "type": "integer", "minimum": 0, "maximum": 2 },
+        "repairs_requested": { "type": "integer", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "approval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "approved_at", "approved_sha256"],
+      "properties": {
+        "status": { "enum": ["pending", "approved"] },
+        "approved_at": { "type": ["string", "null"], "format": "date-time" },
+        "approved_sha256": {
+          "type": ["string", "null"],
+          "pattern": "^[A-F0-9]{64}$"
+        }
+      }
+    },
+    "last_validation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["valid", "errors", "evaluated_at", "candidate_sha256"],
+      "properties": {
+        "valid": { "type": ["boolean", "null"] },
+        "errors": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "evaluated_at": { "type": ["string", "null"], "format": "date-time" },
+        "candidate_sha256": {
+          "type": ["string", "null"],
+          "pattern": "^[A-F0-9]{64}$"
+        }
+      }
+    }
+  }
+}
